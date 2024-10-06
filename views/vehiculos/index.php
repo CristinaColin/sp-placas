@@ -80,7 +80,32 @@
                     <div class="card">
                         <div class="card-body">
                             <h5 class="card-title">Listado</h5>
-
+            <table class="table datatable">
+		    <thead>
+		        <tr>
+		            <th scope="col">#</th>
+		            <th scope="col">niv</th>
+		            <th scope="col">marca</th>
+			    <th scope="col">modelo</th>
+		        </tr>
+		    </thead>
+		    <tbody>
+		        <?php
+		        $personas = $cnx->getVehiculos();
+		        $i = 0;
+		        while($row = mysqli_fetch_object($vehiculos)) {
+		            $i++;
+		            echo "
+		            <tr>
+		                <td>" . $i . "</td>
+		                <td>" . $row->niv . "</td>
+		  		<td>" . $row->marca . "</td>
+      				<td>" . $row->modelo . "</td>
+		            </tr>";
+		        }
+		        ?>
+		    </tbody>
+            </table>
                             
                         </div>
                     </div>
