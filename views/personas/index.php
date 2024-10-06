@@ -101,7 +101,7 @@
                                                     <td>". $row->curp ."</td>
                                                     <td>".$row->nombre." ".$row->primerApellido." ".$row->segundoApellido."</td>";
                                             }
-                                        ?>
+                                        //?>
                                     </tbody>
                                 </table>
                             </div>

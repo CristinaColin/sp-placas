@@ -84,8 +84,8 @@
                                 <input type="hidden" name="funcion" value="registrarPersona">
 
                                 <div class="col-md-4">
-                                    <label for="curp" class="form-label">CURP</label>
-                                    <input type="text" class="form-control" id="niv-input" name="niv" minlength="18th" maxlength="18" required>
+                                    <label for="matricula" class="form-label">Matrícula</label>
+                                    <input type="text" class="form-control" id="niv-input" name="matricula" required>
                                     <div class="invalid-feedback">
                                         Por favor ingrese la CURP.
                                     </div>
