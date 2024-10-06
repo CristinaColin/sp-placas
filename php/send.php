@@ -6,6 +6,9 @@
 		private $dbpass = "";
 		private $dbname = "sp_placas";
 
+        private $successMessage = "";
+        private $errorMessage = "";
+
 		function __construct() {
 			$this->connect_db();
 		}
@@ -18,20 +21,39 @@
 			}
 		}
 
+        function showAlert($mensaje){ // mostrar mensaje y redireccionar
+            echo "<script> 
+                    alert('$mensaje');
+                    window.location.href = 'index.php'; 
+                  </script>";
+        }
+
+        function catchDuplicatedPrimaryKey($mensajeExito, $mensajeError, $sql){
+            try {
+                if (mysqli_query($this->cnx, $sql)) {
+                    $this->showAlert($mensajeExito);
+                }
+            } catch (mysqli_sql_exception $e) {
+                if ($e->getCode() == 1062) { //Error de clave duplicada
+                    $this->showAlert($mensajeError);
+                } else {
+                    $mensaje = 'Error al registrar: ' . $e->getMessage();
+                }
+            }
+        }
+
         public function registrarVehiculo($data) {
-            $tipo_id = mysqli_query($this->cnx, 'SELECT id FROM sp_cat_tipo_vehiculo WHERE descripcion ='.$data['tipo']);
+            $$tipo_id_query = mysqli_query($this->cnx, "SELECT id FROM sp_cat_tipo_vehiculo WHERE descripcion ='".$data['tipo']."'"); 
+            $tipo_id = mysqli_fetch_assoc($tipo_id_query)['id'];
+
             $sql = "INSERT INTO sp_vehiculos (niv, numMotor, numChasis, tipo_id ,tipo, clase, color, modelo, marca, numPuertas,
                                             combustible, cilindros, ejes) 
                     VALUES ('".$data['niv']."','".$data['numMotor']."','".$data['numChasis']."','".$tipo_id. "','".$data['tipo']."', 
                             '".$data['clase']."','".$data['color']."','".$data['modelo']."','".$data['marca']."', 
                             '".$data['numPuertas']."','".$data['combustible']."','".$data['cilindros']."','".$data['ejes']."'
                     )";
-            
-            if (mysqli_query($this->cnx, $sql)) {
-                return "Vehículo registrado con éxito";
-            } else {
-                return "Error al registrar el vehículo: " . mysqli_error($this->cnx);
-            }
+
+            $this->catchDuplicatedPrimaryKey('Vehículo registrado con éxito','Erro: el vehículo con NIV '.$data['niv'].' ya está registrado.', $sql);
         }
 
         public function registrarPersona($data) {
@@ -40,28 +62,16 @@
                             .$data['fechaNacimiento']."','".$data['sexo']."','".$data['direccion']."','".$data['numCelular']."'
                     )";
         
-            $mensaje = ""; // Inicializar mensaje vacío
+            $this->catchDuplicatedPrimaryKey('Persona registrada exitosamente.', 'Error: La curp '.$data['curp'].' ya está registrada.', $sql);
+        }
+
+        public function getPersona($data) {
+            $sql = "INSERT INTO sp_personas (curp, nombre, primerApellido, segundoApellido, fechaNacimiento, sexo, direccion, numCelular) 
+                    VALUES ('".$data['curp']."','".$data['nombre']."','".$data['primerApellido']."','".$data['segundoApellido']."','"
+                            .$data['fechaNacimiento']."','".$data['sexo']."','".$data['direccion']."','".$data['numCelular']."'
+                    )";
         
-            try {
-                // Ejecutar la consulta
-                if (mysqli_query($this->cnx, $sql)) {
-                    $mensaje = 'Persona registrada con éxito';
-                }
-            } catch (mysqli_sql_exception $e) {
-                // Verificar si el error es de clave duplicada
-                if ($e->getCode() == 1062) {
-                    $mensaje = 'Error: La CURP ya está registrada.';
-                } else {
-                    // Mostrar mensaje de error genérico
-                    $mensaje = 'Error al registrar a la persona: ' . $e->getMessage();
-                }
-            }
-        
-            // Mostrar el mensaje y redirigir al índice de personas
-            echo "<script>
-                    alert('$mensaje');
-                    window.location.href = 'index.php';
-                  </script>";
+            $this->catchDuplicatedPrimaryKey('Persona registrada exitosamente.', 'Error: La curp '.$data['curp'].' ya está registrada.', $sql);
         }
         
         
