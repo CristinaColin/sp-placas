@@ -28,6 +28,8 @@
 			$res = mysqli_query($this->cnx, $sql);
 			return $res;
 		}
+
+		public 
 	}
 
 ?>
