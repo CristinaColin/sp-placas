@@ -28,11 +28,6 @@
 			$res = mysqli_query($this->cnx, $sql);
 			return $res;
 		}
-		public function getPersonas() {
-			$sql = "SELECT descripcion FROM sp_cat_tipo_vehiculo ORDER BY descripcion asc";
-			$res = mysqli_query($this->cnx, $sql);
-			return $res;
-		}
 	}
 
 ?>
