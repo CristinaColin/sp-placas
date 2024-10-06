@@ -28,6 +28,17 @@
 			$res = mysqli_query($this->cnx, $sql);
 			return $res;
 		}
+
+		public function getPersonas() {
+			$sql = "SELECT curp, nombre, primerApellido, segundoApellido FROM sp_personas ORDER BY nombre asc";
+			$res = mysqli_query($this->cnx, $sql);
+			return $res;
+		}
+		public function getVehiculos() {
+			$sql = "SELECT niv, numMotor, marca, modelo FROM sp_personas ORDER BY niv asc";
+			$res = mysqli_query($this->cnx, $sql);
+			return $res;
+		}
 	}
 
 ?>
