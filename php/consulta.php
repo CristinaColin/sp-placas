@@ -45,7 +45,7 @@
 		}
 
 		getPersonaByCurp($curp){
-			$sql = "SELECT curp, nombre, primerApellido, segundoApellido FROM sp_personas WHERE curp =$curp ORDER BY nombre ASC LIMIT 100";
+			$sql = "SELECT curp, nombre, primerApellido, segundoApellido FROM sp_personas WHERE curp = '".$curp ."' ORDER BY nombre ASC LIMIT 100";
 			$res = mysqli_query($this->cnx, $sql);
 			return $res;
 		}
@@ -58,7 +58,7 @@
 
 		}
 		getPagoByMatricula($matricula){ // todos los datos
-			$sql = "SELECT persona_curp, fechaPago, monto, concepto FROM sp_pago_placa WHERE placa_matricula =$matricula ORDER BY persona_curp ASC LIMIT 100";
+			$sql = "SELECT persona_curp, fechaPago, monto, concepto FROM sp_pago_placa WHERE placa_matricula = '". $matricula."' ORDER BY persona_curp ASC LIMIT 100";
 			$res = mysqli_query($this->cnx, $sql);
 			return $res;
 		}
