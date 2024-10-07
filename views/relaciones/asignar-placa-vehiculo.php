@@ -1,3 +1,5 @@
+<!DOCTYPE html>
+
 <?php 
     require_once($_SERVER['DOCUMENT_ROOT'].'/php/utils.php');
     include ($_SERVER['DOCUMENT_ROOT'].'/php/consulta.php');
@@ -11,24 +13,12 @@
         if (method_exists($sendData, $funcion)) {
             $response = call_user_func([$sendData, $funcion], $_POST);
         } else {
-            echo "<script>alert(No existe la función'$funcion');</script>";
+            echo "<script>alert('No existe la función".$funcion.");</script>";
         }
-    }
-
-    if(isset($_POST['claseSeleccionada'])) {
-        $clase = $_POST['claseSeleccionada'];
-        $precio = $cnx->getPrecioPlacaByClase($clase);
-
-        if($precio !== null) {
-            echo $precio;
-        } else {
-            echo "No se encontró el precio para la clase seleccionada.";
-        }
-        exit;
     }
 ?>
 
-<!DOCTYPE html>
+
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
     <head>
         
@@ -81,7 +71,7 @@
                     <ol class="breadcrumb"><ol class="breadcrumb">
                         <li class="breadcrumb-item"><a href="/">Inicio</a></li>
                         <li class="breadcrumb-item">Placas</li>
-                        <li class="breadcrumb-item active">Registrar</li>
+                        <li class="breadcrumb-item active">Asignar</li>
                     </ol>
                 </nav>
             </div>
@@ -91,59 +81,73 @@
                 <div class="row">
                     <div class="card">
                         <div class="card-body">
-                            <h5 class="card-title">Registrar nueva placa</h5>
+                            <h5 class="card-title">Asignar placa a un vehículo</h5>
                             
                             <form method="POST" class="row g-3 needs-validation" novalidate>
-                                <input type="hidden" name="funcion" value="registrarPlaca">
+                                <input type="hidden" name="funcion" value="asignarPlacaAVehiculo">
 
-                                <div class="col-md-4">
-                                    <label for="matricula" class="form-label">Matrícula</label>
-                                    <input type="text" class="form-control" id="matricula" name="matricula" maxlength="10" required>
-                                    <div class="invalid-feedback">
-                                        Por favor ingrese la matrícula.
-                                    </div>
-                                </div>
-
+<!-- 
                                 <div class="col-md-3">
-                                    <label for="clase" class="form-label">Clase</label>
-                                    <select class="form-select" name="clase" id="clase" required>
-                                        <option value="" selected disabled hidden>Slecciona una opción...</option>
-                                        <option value="autobús">autobús</option>
-                                        <option value="automóvil">automóvil</option>
-                                        <option value="camión">camión</option>
-                                        <option value="motocicleta">motocicleta</option>
-                                        <option value="persona con discapacidad">persona con discapacidad</option>
-                                        <option value="pipas">pipas</option>
-                                        <option value="remolque">remolque</option>
-                                        <option value="trailer">trailer</option>
-                                    </select>
+                                    <label for="curp" class="form-label">CURP</label>
+                                    <input type="text" class="form-control" id="curp" name="curp" required>
                                     <div class="invalid-feedback">
-                                        Seleccione la clase del vehiculo.
+                                        Por favor ingrese al menos 3 letras o dígitos.
+                                    </div>
+
+                                </div>
+
+                                <div class="col-md-3 mt-5">
+                                    <div class="btn btn-primary" id="buscarByCurp" name="buscarByCurp">
+                                        <i class="bi bi-search"></i>
+                                        Buscar
+                                    </div>
+                                </div> -->
+
+                                <div class="col-md-8">
+                                    <label for="placa_matricula" class="form-label">Placa</label>
+                                    <select class="form-select" name="placa_matricula" id="placa_matricula" required>
+                                        <option value="" selected disabled hidden>Slecciona una opción...</option>
+                                        <?php
+                                            $tipos = $cnx->getPlacas();
+                                            while ($row=mysqli_fetch_object($tipos)){
+                                                echo "<option value=".$row->matricula.">".$row->matricula." - ".$row->clase."</option>";
+                                            }
+                                        ?>
+                                    </select>
+                                   
+                                    <div class="invalid-feedback">
+                                        Por favor seleccione el tipo del vehículo.
                                     </div>
                                 </div>
 
-                                <div class="col-md-3">
-                                    <label for="uso" class="form-label">Uso</label>
-                                    <select class="form-select" name="uso" id="uso" required>
+                                <hr>
+
+                                <div class="col-md-8">
+                                    <label for="vehiculo_niv" class="form-label">Placa</label>
+                                    <select class="form-select" name="vehiculo_niv" id="vehiculo_niv" required>
                                         <option value="" selected disabled hidden>Slecciona una opción...</option>
-                                        <option value="auto clásico">auto clásico</option>
-                                        <option value="carga">carga</option>
-                                        <option value="demostración">demostración</option>
-                                        <option value="particular">particular</option>
-                                        <option value="transporte público">transporte público</option>
+                                        <?php
+                                            $tipos = $cnx->getVehiculos();
+                                            while ($row=mysqli_fetch_object($tipos)){
+                                                echo "<option value=".$row->niv.">".$row->niv." - ".$row->marca." - ".$row->modelo."</option>";
+                                            }
+                                        ?>
                                     </select>
+                                   
                                     <div class="invalid-feedback">
-                                        Seleccione el uso del vehículo.
+                                        Por favor seleccione el tipo del vehículo.
                                     </div>
                                 </div>
 
+
+                                <div class="col-md-4"></div>
                                 <div class="col-md-4">
-                                    <label for="precio" class="form-label">Precio</label>
-                                    <input type="number" class="form-control" id="precio" name="precio" required readonly>
+                                    <label for="fechaAlta" class="form-label">Fecha de asignación</label>
+                                    <input type="date" class="form-control" id="fechaAlta" name="fechaAlta" required>
                                 </div>
 
                                 <div class="col-12">
-                                    <button class="btn btn-primary" type="submit" name="submit" id="registar">Registrar placa</button>
+                                    <button class="btn btn-primary" type="submit" name="submit">Registrar placa</button>
                                 </div>
                             </form><!-- End Custom Styled Validation -->
                         </div>
@@ -194,16 +198,14 @@
         <script>
             $(document).ready(function (){
 
-                $('#clase').change(function(){
-                    var claseSeleccionada = $(this).val();
+                /* $('#buscarByCurp').clik(function(){
+                    var curp = $(this).val();
                     console.log(claseSeleccionada);
 
-                    if(claseSeleccionada)
-                    
                     $.ajax({
                         url: '',
                         type: 'POST',
-                        data: {claseSeleccionada: claseSeleccionada},
+                        data: {curp: curp},
                         success: function(response) {
                             $('#precio').val(response);
                         },
@@ -211,7 +213,7 @@
                             alert("Error al obtener el precio.");
                         }
                     });
-                });
+                }); */
             });
         </script>
     </body>

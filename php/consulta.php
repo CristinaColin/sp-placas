@@ -40,27 +40,49 @@
 			return $res;
 		}
 
-		getPlacas(){
-
+		public function getPlacas(){
+			$sql = "SELECT matricula, uso, clase, precio FROM sp_placas ORDER BY createdAt DESC LIMIT 100";
+			$res = mysqli_query($this->cnx, $sql);
+			return $res;
 		}
 
-		getPersonaByCurp($curp){
+		public function getPersonaByCurp($curp){
 			$sql = "SELECT curp, nombre, primerApellido, segundoApellido FROM sp_personas WHERE curp = '".$curp ."' ORDER BY nombre ASC LIMIT 100";
 			$res = mysqli_query($this->cnx, $sql);
 			return $res;
 		}
 
-		getPagoByPersona($curp){ //YO
-			sp_pago
-
-			p.nombre, p.p
-		leftJoin sp_persona p on p.curp = $curp
-
+		public function getPersonaByNombre($nombre){
+			$sql = "SELECT curp, nombre, primerApellido, segundoApellido FROM sp_personas WHERE nombre = '".$nombre ."' ORDER BY curp ASC";
+			$res = mysqli_query($this->cnx, $sql);
+			return $res;
 		}
-		getPagoByMatricula($matricula){ // todos los datos
+
+		public function getPagoByPersona($curp){ //YO
+			$sql = "SELECT pago.persona_curp, pago.monto, pago.fecha as fechaPago,
+							p.curp, p.nombre, p.primerApellido, p.segundoApellido
+					FROM sp_pago_placa AS pago
+					LEFT JOIN sp_personas p on p.curp = pago.persona_curp
+					WHERE pago.persona_curp = '".$curp."'";
+			$res = mysqli_query($this->cnx, $sql);
+			return $res;
+		}
+		public function getPagoByMatricula($matricula){ // todos los datos
 			$sql = "SELECT persona_curp, fechaPago, monto, concepto FROM sp_pago_placa WHERE placa_matricula = '". $matricula."' ORDER BY persona_curp ASC LIMIT 100";
 			$res = mysqli_query($this->cnx, $sql);
 			return $res;
+		}
+
+		public function getPrecioPlacaByClase($clase){
+			$sql = "SELECT precio FROM sp_cat_precio_placa WHERE clase = '". $clase."' LIMIT 1";
+			$res = mysqli_query($this->cnx, $sql);
+
+			if ($res) {
+				$row = mysqli_fetch_assoc($res);
+				return $row['precio'];
+			} else {
+				return null;
+			}
 		}
 	}
 

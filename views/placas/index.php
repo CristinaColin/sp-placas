@@ -1,3 +1,9 @@
+<?php 
+    require_once($_SERVER['DOCUMENT_ROOT'].'/php/utils.php');
+    include ($_SERVER['DOCUMENT_ROOT'].'/php/consulta.php');
+    $cnx = new placas();
+
+?>
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
     <head>
@@ -7,8 +13,8 @@
         <meta content="" name="keywords">
         <title>Placas UMSNH | Placas</title>
 
-        <link href="/assets/img/logoGobMichFondoRosa.png" rel="icon">
-        <link href="/assets/img/logoGobMichFondoRosa.png" rel="apple-touch-icon">
+        <link href="#" rel="icon">
+        <link href="#" rel="apple-touch-icon">
 
         <!-- Google Fonts -->
         <link href="https://fonts.gstatic.com" rel="preconnect">
@@ -23,7 +29,7 @@
         <link href="/assets/vendor/remixicon/remixicon.css" rel="stylesheet">
         <link href="/assets/vendor/simple-datatables/style.css" rel="stylesheet">
 
-        <!-- Template Main CSS File -->
+        <!-- Template Main CSS File --> 
         <link href="/assets/css/style.css" rel="stylesheet">
 
         <!-- Library: sweetalert2 -->
@@ -46,8 +52,76 @@
         <main id="main" class="main">
             <div class="pagetitle">
                 <h1>Placas</h1>
-                <nav class="mt-2"><ol class="breadcrumb">{{ $nav ?? null}}</ol></nav>
-              </div>
+                <nav class="mt-2">
+                    <ol class="breadcrumb"><ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="/">Inicio</a></li>
+                        <li class="breadcrumb-item active">Placas</li>
+                    </ol></ol>
+                </nav>
+            </div>
+
+            <section class="section">
+                <div class="row">
+
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">Opciones</h5>
+                            <div class="row">
+                                <a class="col-lg-3" href="/views/placas/create.php">
+                                    <button type="button" class="btn btn-primary rounded-pill">
+                                        Registrar placa
+                                    </button>
+                                </a>
+                                <a class="col-lg-4" href="/views/relaciones/asignar-placa-vehiculo.php">
+                                    <button type="button" class="btn btn-warning rounded-pill">
+                                        Asignar placa a vehículo
+                                    </button>
+                                </a>
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">Listado</h5>
+                            <div>
+                                <table class="table datatable">
+                                    <thead>
+                                        <tr>
+                                            <th scope="col">#</th>
+                                            <th scope="col">Matrícula</th>
+                                            <th scope="col">Uso</th>
+                                            <th scope="col">Clase</th>
+                                            <th scope="col">Precio</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <?php
+                                            $personas = $cnx->getPlacas();
+                                            $i = 0;
+                                            while($row=mysqli_fetch_object($personas)){
+                                                $i++;
+                                                echo "
+                                                <tr>
+                                                    <td>". $i ."</td>
+                                                    <td>". $row->matricula ."</td>
+                                                    <td>". $row->uso ."</td>
+                                                    <td>". $row->clase ."</td>
+                                                    <td>".$row->precio."</td>";
+                                            }
+                                        //?>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+            </section>
+
+
         </main>
 
 
@@ -76,7 +150,7 @@
         <script src="/assets/vendor/php-email-form/validate.js"></script>
 
         <!-- Template Main JS File -->
-        <script src="assets/js/main.js"></script>
+        <script src="/assets/js/main.js"></script>
 
         <!-- Library: sweetalert2 -->
         <script src="/assets/sweetalert2/js/sweetalert2.all.min.js"></script>

@@ -89,12 +89,12 @@
                                     </button>
                                 </a>
 
-                                <a class="col-lg-4" href="/views/personas/create.php">
+                                <a class="col-lg-4" href="#">
                                     <button type="button" class="btn btn-warning rounded-pill">
                                         Asignar persona a vehículo
                                     </button>
                                 </a>
-                                <a class="col-lg-4" href="/views/placas/create.php">
+                                <a class="col-lg-4" href="/views/relaciones/asignar-placa-vehiculo.php">
                                     <button type="button" class="btn btn-warning rounded-pill">
                                         Asignar placa a vehículo
                                     </button>

@@ -37,7 +37,7 @@
                 if ($e->getCode() == 1062) { //Error de clave duplicada
                     $this->showAlert($mensajeError);
                 } else {
-                    $mensaje = 'Error al registrar: ' . $e->getMessage();
+                    $mensaje = 'Error: ' . $e->getMessage();
                 }
             }
         }
@@ -75,46 +75,59 @@
         }
 
 	    public function registrarPlaca($data) {
-            $sql = "INSERT INTO sp_placas (matricula, clase, precio) 
-                    VALUES ('".$data['matricula']."','".$data['clase']."','".$data['precio']."')";
-            
-            if (mysqli_query($this->cnx, $sql)) {
-                return "Placa registrada con éxito";
-            } else {
-                return "Error al registrar a la placa: " . mysqli_error($this->cnx);
-            }
+            $sql = "INSERT INTO sp_placas (matricula, uso, clase, precio) 
+                    VALUES ('".$data['matricula']."','".$data['uso']."','".$data['clase']."','".$data['precio']."')";
+            $mensajeExito = "Placa registrada con éxito";
+            $mensajeError = "La matrícula ".$data['matricula']." ya ha sido registrada";
+            $this->catchDuplicatedPrimaryKey($mensajeExito, $mensajeError, $sql);
         }
         public function registrarPagoPlaca($data) {
             $sql = "INSERT INTO sp_pago_placa (id, concepto, persona_curp, placa_matricula, fechaPago, monto) 
                     VALUES ('".$data['id']."','".$data['concepto']."','".$data['persona_curp']."','".$data['placa_matricula']."','".$data['fechaPago']."','".$data['monto']."')";
-            
-            if (mysqli_query($this->cnx, $sql)) {
-                return "Placa pagada con éxito";
-            } else {
-                return "Error al pagar la placa: " . mysqli_error($this->cnx);
-            }
+            $mensajeExito = "Placa pagada con éxito";
+            $mensajeError = "Esta placa ya ha sido pagada por el concepto ".$data['concepto'];
+            $this->catchDuplicatedPrimaryKey($mensajeExito, $mensajeError, $sql);
         }
         public function asignarPersonaAVehiculo($data) {
-            $sql = "INSERT INTO sp_rel_persona_vehiculo (id, persona_curp, vehiculo_niv, fechaInicial, fechaFinal) 
-                    VALUES ('".$data['id']."','".$data['persona_curp']."','".$data['vehiculo_niv']."','".$data['fechaInicial']."','".$data['fechaFinal']."')";
+            $sql = "UPDATE sp_rel_persona_vehiculo SET fechaFinal = '".$data['fechaFinal']."' WHERE vehiculo_niv = '".$data['vehiculo_niv']."'";
             
+            $mensajeExito = "Persona asignada al vehículo con éxito";
+            $mensajeError = "La persona ya tiene este vehiculo asignado";
+            $this->catchDuplicatedPrimaryKey($mensajeExito, $mensajeError, $sql);
+        }
+        
+        public function quitarPersonaAVehiculo($data) {
+            $sql = "INSERT INTO sp_rel_persona_vehiculo (id, persona_curp, vehiculo_niv, fechaInicial) 
+                    VALUES ('".$data['id']."','".$data['persona_curp']."','".$data['vehiculo_niv']."','".$data['fechaInicial']."')";
+            
+            $mensajeExito = "El vehículo ya no le pertenese a " .$data['persona_curp'];
             if (mysqli_query($this->cnx, $sql)) {
-                return "Personada asignada al vehículo con éxito";
+                return $mensajeExito;
             } else {
-                return "Error al asignar la persona al vehículo: " . mysqli_error($this->cnx);
+                return "Error: " . mysqli_error($this->cnx);
             }
         }
+
         public function asignarPlacaAVehiculo($data) {
-            $sql = "INSERT INTO sp_rel_persona_vehiculo (id, placa_matricula, vehiculo_niv, fechaAlta, fechaBaja, motivoBaja) 
-                    VALUES ('".$data['id']."','".$data['placa_matricula']."','".$data['vehiculo_niv']."','".$data['fechaAlta']."','".$data['fechaBaja']."','".$data['motivoBaja']."')";
+            $sql = "INSERT INTO sp_rel_placa_vehiculo (placa_matricula, vehiculo_niv, fechaAlta) 
+                    VALUES ('".$data['placa_matricula']."','".$data['vehiculo_niv']."','".$data['fechaAlta']."')";
             
+            $mensajeExito = "Placa asignada con éxito";
+            $mensajeError = "La placa ".$data['placa_matricula']." ya está asignada a este vehículo";
+        
             if (mysqli_query($this->cnx, $sql)) {
-                return "Placa asignada con éxito";
+                echo "<script>alert('$mensajeExito');</script>";
             } else {
-                return "Error al asignar la placa: " . mysqli_error($this->cnx);
+                echo "<script>alert('Error: " . mysqli_error($this->cnx) . "');</script>";
+                return;
             }
         
+            // Redirección usando window.location.href con una URL relativa o completa
+            echo "<script> 
+                    window.location.href = '/index.php'; 
+                  </script>";
         }
+        
 	}
 
 ?>
