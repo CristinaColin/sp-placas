@@ -30,12 +30,12 @@
 		}
 
 		public function getPersonas() {
-			$sql = "SELECT curp, nombre, primerApellido, segundoApellido FROM sp_personas ORDER BY nombre asc";
+			$sql = "SELECT curp, nombre, primerApellido, segundoApellido FROM sp_personas ORDER BY nombre ASC LIMIT 100";
 			$res = mysqli_query($this->cnx, $sql);
 			return $res;
 		}
 		public function getVehiculos() {
-			$sql = "SELECT niv, numMotor, marca, modelo FROM sp_personas ORDER BY niv asc";
+			$sql = "SELECT niv, numMotor, marca, modelo FROM sp_vehiculos ORDER BY niv ASC LIMIT 100";
 			$res = mysqli_query($this->cnx, $sql);
 			return $res;
 		}

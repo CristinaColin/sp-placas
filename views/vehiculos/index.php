@@ -1,3 +1,9 @@
+<?php 
+    require_once($_SERVER['DOCUMENT_ROOT'].'/php/utils.php');
+    include ($_SERVER['DOCUMENT_ROOT'].'/php/consulta.php');
+    $cnx = new placas();
+
+?>
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
     <head>
@@ -80,32 +86,32 @@
                     <div class="card">
                         <div class="card-body">
                             <h5 class="card-title">Listado</h5>
-            <table class="table datatable">
-		    <thead>
-		        <tr>
-		            <th scope="col">#</th>
-		            <th scope="col">niv</th>
-		            <th scope="col">marca</th>
-			    <th scope="col">modelo</th>
-		        </tr>
-		    </thead>
-		    <tbody>
-		        <?php
-		        $personas = $cnx->getVehiculos();
-		        $i = 0;
-		        while($row = mysqli_fetch_object($vehiculos)) {
-		            $i++;
-		            echo "
-		            <tr>
-		                <td>" . $i . "</td>
-		                <td>" . $row->niv . "</td>
-		  		<td>" . $row->marca . "</td>
-      				<td>" . $row->modelo . "</td>
-		            </tr>";
-		        }
-		        ?>
-		    </tbody>
-            </table>
+                            <table class="table datatable">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">#</th>
+                                        <th scope="col">niv</th>
+                                        <th scope="col">marca</th>
+                                        <th scope="col">modelo</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <?php
+                                    $vehiculos = $cnx->getVehiculos();
+                                    $i = 0;
+                                    while($row=mysqli_fetch_object($vehiculos)) {
+                                        $i++;
+                                        echo "
+                                        <tr>
+                                            <td>" . $i . "</td>
+                                            <td>" . $row->niv . "</td>
+                                            <td>" . $row->marca . "</td>
+                                            <td>" . $row->modelo . "</td>
+                                        </tr>";
+                                    }
+                                    ?>
+                                </tbody>
+                            </table>
                             
                         </div>
                     </div>

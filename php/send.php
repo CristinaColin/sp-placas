@@ -74,7 +74,7 @@
             $this->catchDuplicatedPrimaryKey('Persona registrada exitosamente.', 'Error: La curp '.$data['curp'].' ya está registrada.', $sql);
         }
 
-	public function registrarPlaca($data) {
+	    public function registrarPlaca($data) {
             $sql = "INSERT INTO sp_placas (matricula, clase, precio) 
                     VALUES ('".$data['matricula']."','".$data['clase']."','".$data['precio']."')";
             
@@ -114,7 +114,7 @@
                 return "Error al asignar la placa: " . mysqli_error($this->cnx);
             }
         
-        
+        }
 	}
 
 ?>
