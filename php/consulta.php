@@ -39,6 +39,25 @@
 			$res = mysqli_query($this->cnx, $sql);
 			return $res;
 		}
+
+		getPlacas(){
+
+		}
+
+		getPersonaByCurp($curp){
+			where curp = $curp;
+		}
+
+		getPagoByPersona($curp){ //YO
+			sp_pago
+
+			p.nombre, p.p
+		leftJoin sp_persona p on p.curp = $curp
+
+		}
+		getPagoByMatricula($matricula){ // todos los datos
+			sp_pago
+		}
 	}
 
 ?>
